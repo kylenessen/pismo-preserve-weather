@@ -1,3 +1,9 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "requests",
+# ]
+# ///
 """
 Pismo Preserve Weather Data Fetcher
 ====================================
@@ -9,7 +15,7 @@ Data is stored in a local SQLite database. The script is idempotent — it skips
 dates already fetched, so you can safely re-run to fill gaps or extend the range.
 
 Usage:
-    python fetch_weather.py
+    uv run fetch_weather.py
 
 API Key: Uses the Weather Underground API (free tier via IBM).
 """
@@ -219,6 +225,45 @@ def export_temperature_csv(db_path, output_path):
     return len(rows)
 
 
+def export_all_csv(db_path, output_path):
+    """Export all weather data to CSV — every field, every observation."""
+    conn = sqlite3.connect(db_path)
+    query = """
+    SELECT
+        station_id, obs_time_local, obs_time_utc, epoch, lat, lon,
+        temp_high, temp_low, temp_avg,
+        humidity_high, humidity_low, humidity_avg,
+        dewpt_high, dewpt_low, dewpt_avg,
+        windspeed_high, windspeed_low, windspeed_avg, winddir_avg, windgust_high,
+        pressure_max, pressure_min,
+        precip_rate, precip_total,
+        solar_radiation_high, uv_high
+    FROM observations
+    ORDER BY station_id, obs_time_local
+    """
+    cursor = conn.cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    conn.close()
+
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "station_id", "datetime_local", "datetime_utc", "epoch", "lat", "lon",
+            "temp_high_c", "temp_low_c", "temp_avg_c",
+            "humidity_high_pct", "humidity_low_pct", "humidity_avg_pct",
+            "dewpt_high_c", "dewpt_low_c", "dewpt_avg_c",
+            "windspeed_high_kmh", "windspeed_low_kmh", "windspeed_avg_kmh",
+            "winddir_avg_deg", "windgust_high_kmh",
+            "pressure_max_hpa", "pressure_min_hpa",
+            "precip_rate_mm", "precip_total_mm",
+            "solar_radiation_high_wm2", "uv_high"
+        ])
+        writer.writerows(rows)
+    return len(rows)
+
+
 # --- Main ---
 
 def generate_dates(start, end):
@@ -266,10 +311,14 @@ def main():
     conn.close()
     print(f"\nDone. Database at: {DB_PATH}")
 
-    # Auto-export CSV
+    # Auto-export CSVs
     csv_path = os.path.join(EXPORT_DIR, "pismo_temperature_data.csv")
     n = export_temperature_csv(DB_PATH, csv_path)
     print(f"Exported {n} rows to {csv_path}")
+
+    all_csv_path = os.path.join(EXPORT_DIR, "pismo_all_weather_data.csv")
+    n2 = export_all_csv(DB_PATH, all_csv_path)
+    print(f"Exported {n2} rows (all fields) to {all_csv_path}")
 
 
 if __name__ == "__main__":
