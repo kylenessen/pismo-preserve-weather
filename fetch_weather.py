@@ -8,8 +8,7 @@
 Pismo Preserve Weather Data Fetcher
 ====================================
 Fetches historical weather data from Weather Underground personal weather stations
-near the Pismo Preserve. Designed for Emily Taylor's lab (Cal Poly) — Sam Russell's
-project needing temperature data from 2021 to present.
+near the Pismo Preserve. Collects temperature and weather data from 2021 to present.
 
 Data is stored in a local SQLite database. The script is idempotent — it skips
 dates already fetched, so you can safely re-run to fill gaps or extend the range.
