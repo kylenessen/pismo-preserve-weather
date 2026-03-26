@@ -1,6 +1,6 @@
 # Pismo Preserve Weather Data
 
-Temperature and weather data from Weather Underground personal weather stations near the Pismo Preserve, 2021–present. Built for Emily Taylor's lab at Cal Poly — Sam Russell's project.
+Temperature and weather data from Weather Underground personal weather stations near the Pismo Preserve, 2021–present.
 
 ## Quick Start (if you already have Python and Git)
 
@@ -85,13 +85,13 @@ Open it in Excel, Google Sheets, R, or whatever you use for analysis.
 
 ---
 
-## Setting Up VS Code with an AI Assistant
+## Setting Up VS Code with an AI Coding Agent
 
 1. Download **VS Code** from https://code.visualstudio.com/
-2. Open VS Code and install the **GitHub Copilot** extension (or **OpenAI Codex** extension)
-   - Cal Poly students: sign in with your `.calpoly.edu` GitHub account for free Copilot access
-3. Open a terminal in VS Code: **Terminal > New Terminal** (or Ctrl+`)
-4. Use the AI assistant to help you run the setup commands above — just paste this README's URL and ask it to walk you through the setup
+2. Open VS Code and install the **Codex** extension by OpenAI — search for "Codex" in the Extensions panel or find it here: https://marketplace.visualstudio.com/items?itemName=openai.chatgpt
+3. Codex will appear as a panel on the right side of VS Code. When prompted to sign in, **use your full university email address** (e.g. `yourname@calpoly.edu`) — education accounts get free access.
+4. Open a terminal in VS Code: **Terminal > New Terminal** (or Ctrl+`)
+5. Use Codex to help you run the setup commands above — paste the repo URL (https://github.com/kylenessen/pismo-preserve-weather) and ask it to help you set everything up on your machine
 
 ---
 
@@ -132,8 +132,8 @@ Open it in Excel, Google Sheets, R, or whatever you use for analysis.
 | `windspeed_avg_kmh` | Average wind speed (km/h) |
 | `solar_radiation_high_wm2` | Peak solar radiation (W/m²) |
 
-### Full Database
-All data (including dewpoint, pressure, precipitation, wind direction, UV index) is stored in `pismo_weather.db` (SQLite). The CSV export includes the most commonly needed fields. To export everything, you can ask your AI assistant to modify the export query in `fetch_weather.py`, or run a query directly against the database.
+### Full CSV Export (`exports/pismo_all_weather_data.csv`)
+A second CSV with every field is also exported automatically — includes dewpoint, pressure, precipitation, wind direction, UV index, coordinates, and more. If you only need temperature data, use the focused export above. If you need everything, use this one.
 
 ## Re-running
 
